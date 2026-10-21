@@ -1,0 +1,27 @@
+name: 周报讨论
+description: 为某份学习周报创建讨论 Issue（Discussions 未启用时使用）
+title: "[周报讨论] "
+labels:
+  - weekly-report
+body:
+  - type: input
+    id: report_title
+    attributes:
+      label: 周报标题
+      placeholder: 例如 2026-W42 团队学习周报
+    validations:
+      required: true
+  - type: input
+    id: report_link
+    attributes:
+      label: 周报链接
+      placeholder: 粘贴 reports/*.md 的仓库链接
+    validations:
+      required: true
+  - type: textarea
+    id: discussion_points
+    attributes:
+      label: 讨论点
+      description: 写下你希望团队重点讨论的问题
+    validations:
+      required: true

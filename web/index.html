@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 学习周报论坛</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <header class="hero">
+      <div class="container">
+        <h1>AI 学习周报论坛</h1>
+        <p>
+          面向团队的学习协作空间。每周提交周报，沉淀学习成果，并在
+          GitHub Discussions / Issues 持续讨论。
+        </p>
+        <p class="hero-actions">
+          <a href="./reports/" class="button-link">浏览周报目录</a>
+          <a
+            href="https://github.com/Yang-Shuai666/Physics-AI-Forum"
+            class="button-link secondary"
+            >参与贡献</a
+          >
+        </p>
+      </div>
+    </header>
+
+    <main id="main-content" class="container">
+      <section aria-labelledby="recent-reports-title">
+        <h2 id="recent-reports-title">最近周报</h2>
+        <div id="recent-reports" class="card-grid"></div>
+      </section>
+
+      <section aria-labelledby="filters-title">
+        <h2 id="filters-title">按方向查找周报</h2>
+        <form id="filter-form" class="filter-form">
+          <label for="direction-select">方向</label>
+          <select id="direction-select" name="direction">
+            <option value="">全部方向</option>
+          </select>
+
+          <label for="search-input">关键词</label>
+          <input
+            id="search-input"
+            name="keyword"
+            type="search"
+            placeholder="搜索标题/作者/摘要/方向"
+          />
+        </form>
+        <p id="result-count" aria-live="polite"></p>
+        <div id="report-list" class="card-grid"></div>
+      </section>
+
+      <section aria-labelledby="directions-title">
+        <h2 id="directions-title">学习方向</h2>
+        <div class="card-grid">
+          <article class="card"><h3>Agent</h3><p>任务规划、工具调用、自动化执行。</p></article>
+          <article class="card"><h3>数字人</h3><p>形象驱动、语音交互、多模态表现。</p></article>
+          <article class="card"><h3>自动驾驶</h3><p>感知、预测、规划控制与安全验证。</p></article>
+          <article class="card"><h3>具身智能</h3><p>机器人感知决策一体化与真实环境交互。</p></article>
+        </div>
+      </section>
+
+      <section aria-labelledby="workflow-title">
+        <h2 id="workflow-title">团队协作流程</h2>
+        <ol class="workflow-list">
+          <li>每周基于模板新建周报 Markdown。</li>
+          <li>提交 PR，补充讨论入口（Discussions 或 Issues）。</li>
+          <li>Review 后合并，GitHub Pages 自动更新首页。</li>
+          <li>围绕周报在 Discussions/Issues 继续讨论并跟进行动项。</li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <small>© Physics-AI-Forum · 静态站点不保存评论，讨论请使用 GitHub Discussions/Issues。</small>
+      </div>
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

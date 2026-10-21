@@ -1,0 +1,12 @@
+{
+  "name": "physics-ai-forum",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI 学习周报论坛静态站点",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
