@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Physics AI 学习论坛</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; max-width: 900px; }
+      h1, h2 { margin-bottom: 8px; }
+      section { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+      form { display: grid; gap: 10px; margin-bottom: 16px; }
+      input, textarea, button, select { font-size: 14px; padding: 8px; }
+      ul { padding-left: 18px; }
+      li { margin: 8px 0; }
+      .meta { color: #666; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Physics AI 学习论坛</h1>
+    <p>按时间段上传学习成果文档，并进行文字讨论。</p>
+
+    <section>
+      <h2>上传学习成果</h2>
+      <form id="submission-form">
+        <input name="period" placeholder="时间段（如 2026-W43）" required />
+        <select name="topic" required>
+          <option value="">选择学习方向</option>
+          <option value="Agent">Agent</option>
+          <option value="数字人">数字人</option>
+          <option value="自动驾驶">自动驾驶</option>
+          <option value="具身智能">具身智能</option>
+          <option value="其他">其他</option>
+        </select>
+        <input name="title" placeholder="成果标题" required />
+        <input name="uploader" placeholder="你的名字" required />
+        <textarea name="description" rows="3" placeholder="简要说明（可选）"></textarea>
+        <input type="file" name="document" required />
+        <button type="submit">上传</button>
+      </form>
+      <ul id="submissions"></ul>
+    </section>
+
+    <section>
+      <h2>文字讨论</h2>
+      <form id="discussion-form">
+        <input name="author" placeholder="你的名字" required />
+        <textarea name="content" rows="3" placeholder="输入讨论内容" required></textarea>
+        <button type="submit">发送</button>
+      </form>
+      <ul id="discussions"></ul>
+    </section>
+
+    <script>
+      async function loadSubmissions() {
+        const list = document.getElementById("submissions");
+        const data = await fetch("/api/submissions").then((r) => r.json());
+        list.innerHTML = data.map((item) => `
+          <li>
+            <a href="${item.download_url}">${item.title}</a>（${item.topic} / ${item.period}）
+            <div class="meta">上传者：${item.uploader} · ${item.created_at}</div>
+            ${item.description ? `<div>${item.description}</div>` : ""}
+          </li>
+        `).join("") || "<li>暂无上传内容</li>";
+      }
+
+      async function loadDiscussions() {
+        const list = document.getElementById("discussions");
+        const data = await fetch("/api/discussions").then((r) => r.json());
+        list.innerHTML = data.map((item) => `
+          <li>
+            <strong>${item.author}：</strong>${item.content}
+            <div class="meta">${item.created_at}</div>
+          </li>
+        `).join("") || "<li>暂无讨论</li>";
+      }
+
+      document.getElementById("submission-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch("/api/submissions", { method: "POST", body: formData });
+        if (!res.ok) {
+          alert("上传失败，请检查必填项");
+          return;
+        }
+        e.target.reset();
+        await loadSubmissions();
+      });
+
+      document.getElementById("discussion-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const payload = Object.fromEntries(formData.entries());
+        const res = await fetch("/api/discussions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          alert("发送失败，请检查内容");
+          return;
+        }
+        e.target.reset();
+        await loadDiscussions();
+      });
+
+      loadSubmissions();
+      loadDiscussions();
+    </script>
+  </body>
+</html>
