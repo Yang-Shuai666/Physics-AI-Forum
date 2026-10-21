@@ -1,3 +1,75 @@
+
+const API_BASE = "https://physics-ai-forum-api.dadashuai686.workers.dev";
+
+const authStatusEl = document.getElementById("auth-status");
+const authActionsEl = document.getElementById("auth-actions");
+
+async function initAuth() {
+  try {
+    const response = await fetch(`${API_BASE}/api/me`, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.authenticated) {
+      authStatusEl.textContent =
+        `已登录：${data.user.login}`;
+
+      authActionsEl.replaceChildren();
+
+      const logoutButton = document.createElement("button");
+      logoutButton.type = "button";
+      logoutButton.className = "button-link secondary";
+      logoutButton.textContent = "退出登录";
+
+      logoutButton.addEventListener("click", async () => {
+        logoutButton.disabled = true;
+
+        try {
+          const result = await fetch(`${API_BASE}/auth/logout`, {
+            method: "POST",
+            credentials: "include"
+          });
+
+          if (!result.ok) {
+            throw new Error(`HTTP ${result.status}`);
+          }
+
+          await initAuth();
+        } catch (error) {
+          authStatusEl.textContent = "退出失败，请稍后重试";
+          console.error(error);
+        } finally {
+          logoutButton.disabled = false;
+        }
+      });
+
+      authActionsEl.append(logoutButton);
+    } else {
+      authStatusEl.textContent = "你尚未登录";
+
+      const loginLink = document.createElement("a");
+      loginLink.className = "button-link";
+      loginLink.href = `${API_BASE}/auth/login`;
+      loginLink.textContent = "使用 GitHub 登录";
+
+      authActionsEl.replaceChildren(loginLink);
+    }
+  } catch (error) {
+    authStatusEl.textContent = "暂时无法获取登录状态";
+    console.error("Auth error:", error);
+  }
+}
+
+initAuth();
+
+
 const reportListEl = document.getElementById("report-list");
 const recentEl = document.getElementById("recent-reports");
 const directionSelect = document.getElementById("direction-select");
