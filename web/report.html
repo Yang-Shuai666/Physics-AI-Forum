@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>周报详情</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <div class="top-nav">
+          <a href="./index.html" class="logo">返回首页</a>
+          <div class="auth-actions">
+            <a id="login-link" class="button-link secondary" href="#">GitHub 登录</a>
+            <a id="logout-link" class="button-link secondary" href="#">退出</a>
+            <a id="new-report-link" class="button-link" href="./new-report.html" hidden>在线提交周报</a>
+          </div>
+        </div>
+        <p id="auth-status" class="auth-status" aria-live="polite"></p>
+        <p id="guest-tip" class="auth-tip">未登录时可浏览周报，提交请先 GitHub 登录。</p>
+        <h1 id="report-title">周报详情</h1>
+      </div>
+    </header>
+
+    <main class="container">
+      <section>
+        <h2>Front Matter 元数据</h2>
+        <div id="report-meta" class="card"></div>
+      </section>
+      <section>
+        <h2>正文</h2>
+        <article id="report-content" class="card markdown-content"></article>
+      </section>
+    </main>
+
+    <script src="./app-config.js"></script>
+    <script type="module" src="./report.js"></script>
+  </body>
+</html>

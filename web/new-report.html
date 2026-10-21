@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>在线提交周报</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <div class="top-nav">
+          <a href="./index.html" class="logo">返回首页</a>
+          <div class="auth-actions">
+            <a id="login-link" class="button-link secondary" href="#">GitHub 登录</a>
+            <a id="logout-link" class="button-link secondary" href="#">退出</a>
+          </div>
+        </div>
+        <h1>在线提交周报</h1>
+        <p id="auth-status" class="auth-status" aria-live="polite"></p>
+        <p id="guest-tip" class="auth-tip">未登录时无法提交，请先完成 GitHub 登录。</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section>
+        <p id="submit-status" aria-live="polite"></p>
+        <form id="new-report-form" class="report-form" hidden>
+          <label>标题 <input name="title" required /></label>
+          <label>作者 <input name="author" required /></label>
+          <label>日期 <input name="date" type="date" required /></label>
+          <label>周次（YYYY-Www） <input name="week" pattern="\d{4}-W\d{2}" required /></label>
+          <label>方向（逗号分隔） <input name="directions" required placeholder="agent,数字人" /></label>
+          <label>学习目标 <textarea name="goal" required></textarea></label>
+          <label>摘要 <textarea name="summary" required></textarea></label>
+          <label>成果总结 <textarea name="achievements" required></textarea></label>
+          <label>关键资料 <textarea name="resources" required placeholder="- 标题：链接"></textarea></label>
+          <label>代码/演示链接 <textarea name="demoLinks" required placeholder="- 仓库或 Demo：链接"></textarea></label>
+          <label>问题与讨论点 <textarea name="questions" required></textarea></label>
+          <label>下周计划 <textarea name="nextPlan" required></textarea></label>
+          <label>Discussion 链接（可选） <input name="discussionUrl" type="url" /></label>
+          <button type="submit" class="button-link">提交并创建 PR</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="./app-config.js"></script>
+    <script type="module" src="./new-report.js"></script>
+  </body>
+</html>
