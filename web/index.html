@@ -12,8 +12,8 @@
       <div class="container">
         <h1>AI 学习周报论坛</h1>
         <p>
-          面向团队的学习协作空间。每周提交周报，沉淀学习成果，并在
-          GitHub Discussions / Issues 持续讨论。
+          仓库本身就是学习讨论区：直接在 GitHub 网页发布周报，并通过
+          Issues 持续讨论，无需本地搭建或部署。
         </p>
         <p class="hero-actions">
           <a href="./reports/" class="button-link">浏览周报目录</a>
@@ -65,10 +65,10 @@
       <section aria-labelledby="workflow-title">
         <h2 id="workflow-title">团队协作流程</h2>
         <ol class="workflow-list">
-          <li>每周基于模板新建周报 Markdown。</li>
-          <li>提交 PR，补充讨论入口（Discussions 或 Issues）。</li>
-          <li>Review 后合并，GitHub Pages 自动更新首页。</li>
-          <li>围绕周报在 Discussions/Issues 继续讨论并跟进行动项。</li>
+          <li>每周在 <code>reports/</code> 新建周报 Markdown（可直接网页提交）。</li>
+          <li>创建“周报讨论” Issue，填写周报链接与讨论问题。</li>
+          <li>围绕周报在 Issues 继续讨论并跟进行动项。</li>
+          <li>可选：通过 PR 审核并使用 GitHub Pages 展示周报列表。</li>
         </ol>
       </section>
     </main>
@@ -76,6 +76,7 @@
     <footer class="footer">
       <div class="container">
         <small>© Physics-AI-Forum · 静态站点不保存评论，讨论请使用 GitHub Discussions/Issues。</small>
+        <small>GitHub Pages 仅为可选浏览界面，不是参与讨论的必需条件。</small>
       </div>
     </footer>
 
