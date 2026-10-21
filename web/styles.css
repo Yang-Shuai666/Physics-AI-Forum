@@ -156,3 +156,29 @@ main section {
     align-items: center;
   }
 }
+
+
+.auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+#auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#auth-actions button {
+  font: inherit;
+  cursor: pointer;
+}
+
