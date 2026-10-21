@@ -1,0 +1,31 @@
+---
+title: 2026-10-21 AI 学习周报（请改标题）
+author: 大大帅
+date: 2026-10-21
+
+directions:
+  - agent
+  
+goal: 完成 Advanced RAG 与生产级向量数据库
+summary: 学习了使用langchain实现RAG的流程
+discussion_url:
+issue_fallback_url: https://github.com/Yang-Shuai666/Physics-AI-Forum/issues/new?title=%5B%E5%91%A8%E6%8A%A5%E8%AE%A8%E8%AE%BA%5D%202026-Wxx
+---
+
+# 2026-Wxx AI 学习周报
+
+## 关键资料
+
+- 资料标题：https://github.com/adongwanai/AgentGuide/blob/main/docs/05-roadmaps/learning-roadmap-development.md
+
+## 代码 / 演示链接
+
+- 仓库或 Demo：链接
+
+## 问题与讨论点
+
+- RAG还有什么能发的论文吗
+
+## 下周计划
+
+- Advanced RAG 与生产级向量数据库
