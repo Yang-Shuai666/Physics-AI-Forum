@@ -72,9 +72,13 @@ tags: [评测, benchmark]
 ## 管理员：一次性配置
 
 1. **Pages**：`Settings → Pages → Source = GitHub Actions`。
-2. **Discussions**：`Settings → Features → Discussions` 打开；在 Discussions 里新建分类 `周报讨论`，类型选 **Announcements**（这样只有 giscus 机器人能新建讨论，别人只能评论）。
-3. **giscus**：打开 [giscus.app](https://giscus.app)，填仓库 `Yang-Shuai666/Physics-AI-Forum`、映射选 `pathname`、分类选 `周报讨论`，把生成的 `data-repo-id` 和 `data-category-id` 填进 `site.config.json → giscus`，同时安装 giscus App。
-4. 改 `site.config.json` 里的 `siteUrl` / `basePath`（项目页要带仓库名）。
+2. **Discussions**：`Settings → Features → Discussions` 已开启。
+3. **giscus**：`site.config.json → giscus` 已填好（`repoId = R_kgDOVR_jDw`，分类用内置的 `Announcements`）。
+   只需要**再装一次 [giscus App](https://github.com/apps/giscus) 并授权这个仓库**——没装的话评论框会报 "giscus is not installed on this repository"。
+4. 想换成专属分类的话：Discussions 里新建一个 **Announcements** 类型的分类（如 `周报讨论`），然后
+   `curl "https://giscus.app/api/discussions/categories?repo=Yang-Shuai666/Physics-AI-Forum"` 查到它的 `id`，
+   填进 `site.config.json` 的 `category` / `categoryId`。
+5. 改 `site.config.json` 里的 `siteUrl` / `basePath`（项目页要带仓库名）。
 
 ## 本地开发
 

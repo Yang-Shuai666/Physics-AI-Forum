@@ -25,9 +25,9 @@
   },
   "giscus": {
     "enabled": true,
-    "repoId": "REPLACE_WITH_GISCUS_REPO_ID",
-    "category": "周报讨论",
-    "categoryId": "REPLACE_WITH_GISCUS_CATEGORY_ID",
+    "repoId": "R_kgDOVR_jDw",
+    "category": "Announcements",
+    "categoryId": "DIC_kwDOVR_jD84DJPqR",
     "mapping": "pathname",
     "lang": "zh-CN",
     "theme": "preferred_color_scheme",
