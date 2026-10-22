@@ -1,0 +1,37 @@
+{
+  "title": "Physics-AI-Forum",
+  "tagline": "团队每周学习周报",
+  "description": "Agent / 数字人 / 自动驾驶 / 具身智能 —— 每周一份学习成果，一个能讨论的地方。",
+  "repo": "Yang-Shuai666/Physics-AI-Forum",
+  "branch": "main",
+  "basePath": "/Physics-AI-Forum/",
+  "siteUrl": "https://yang-shuai666.github.io",
+  "homeLatest": 6,
+  "directions": [
+    { "key": "agent", "name": "Agent", "desc": "任务规划、工具调用、自动化执行" },
+    { "key": "avatar", "name": "数字人", "desc": "形象驱动、语音交互、多模态表现" },
+    { "key": "autodrive", "name": "自动驾驶", "desc": "感知、预测、规划控制与安全验证" },
+    { "key": "embodied", "name": "具身智能", "desc": "机器人感知决策一体化与真实环境交互" }
+  ],
+  "aliases": {
+    "Agent": "agent",
+    "agents": "agent",
+    "RAG": "agent",
+    "数字人": "avatar",
+    "虚拟人": "avatar",
+    "自动驾驶": "autodrive",
+    "具身智能": "embodied",
+    "机器人": "embodied"
+  },
+  "giscus": {
+    "enabled": true,
+    "repoId": "REPLACE_WITH_GISCUS_REPO_ID",
+    "category": "周报讨论",
+    "categoryId": "REPLACE_WITH_GISCUS_CATEGORY_ID",
+    "mapping": "pathname",
+    "lang": "zh-CN",
+    "theme": "preferred_color_scheme",
+    "reactions": true,
+    "inputPosition": "top"
+  }
+}

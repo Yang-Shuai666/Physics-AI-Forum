@@ -1,12 +1,25 @@
 {
   "name": "physics-ai-forum",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "AI 学习周报论坛静态站点",
+  "description": "团队周报门户：Markdown 存储 + GitHub Pages 静态站点 + giscus 讨论",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "build:search": "pagefind --site dist",
+    "build:all": "npm run build && npm run build:search",
+    "validate": "node scripts/validate.mjs",
+    "preview": "node scripts/serve.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.12.0",
+    "markdown-it": "^15.0.3",
+    "markdown-it-anchor": "^10.0.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

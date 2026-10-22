@@ -1,71 +1,97 @@
-# CONTRIBUTING
+# 怎么写周报
 
-感谢参与 AI 学习周报论坛！
+## 1. 一次提交 = 一份周报
 
-## 0. 最低参与门槛（必需）
+在 `reports/` 下新建一个文件，命名规则：
 
-- 只需要 GitHub 账号和浏览器
-- 直接在仓库网页完成周报提交与 Issues 讨论
-- 不需要安装 Node.js、不需要本地构建、不需要部署 Pages
+```text
+YYYY-Www-<英文短横线主题>.md
+```
 
-## 1. 提交周报（GitHub 网页即可）
+例：`2026-W44-agent-benchmark.md`、`2026-W44-ad-perception.md`
 
-1. 从 `reports/_template.md` 复制出新文件到 `reports/` 目录  
-   命名：`YYYY-Www-主题.md`（示例：`2026-W42-agent-eval.md`）
-2. 填写 front matter（必填推荐）：
-   - `title`
-   - `author`
-   - `date`（YYYY-MM-DD）
-   - `week`（YYYY-Www）
-   - `directions`（列表）
-   - `goal`
-   - `summary`
-   - `discussion_url`（优先）
-   - `issue_fallback_url`（兜底）
-3. 在正文补全：
-   - 学习目标
-   - 成果总结
-   - 关键资料
-   - 代码/演示链接
-   - 问题与讨论点
-   - 下周计划
+- 前缀周次必须和 `date` 所在的 ISO 周一致，否则 CI 会报错。
+- 主题用英文小写和短横线：中文文件名在 URL 里会被编码，分享和排查都麻烦。
+- 同一周可以有多份周报（团队总览 + 各方向子周报）。
 
-## 2. 发起周报讨论 Issue（推荐必做）
+不想手动建文件？打开站点首页点「＋ 提交本周周报」，GitHub 会预填模板和文件名。
 
-1. 进入仓库 `Issues` → `New issue` → 选择“周报讨论”
-2. 填写：
-   - 周报标题
-   - 周报 Markdown 链接（`reports/*.md`）
-   - 重点讨论问题
-   - 期望反馈类型
-3. 发布后在该 Issue 线程持续补充与回复
+## 2. front matter 字段
 
-## 3. 发起 PR（可选）
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `title` | ✅ | 标题，建议带周次和方向，如 `2026-W44 Agent 评测与成本` |
+| `author` | ✅ | 显示名 |
+| `github` | | GitHub 用户名，不带 `@`，用于以后跳转主页 |
+| `date` | ✅ | `YYYY-MM-DD`，写完这周的最后一天 |
+| `week` | | `YYYY-Www`，可省略，由 `date` 自动推导并校验 |
+| `directions` | ✅ | 方向 key 列表，取值见 `site.config.json`：`agent` / `avatar` / `autodrive` / `embodied` |
+| `goal` | ✅ | 一句话目标，详情页顶部色块显示 |
+| `summary` | ✅ | 两三句话，列表卡片显示，≤160 字 |
+| `tags` | | 关键词列表，用于筛选和搜索 |
+| `status` | | `done`（默认）/ `draft` / `wip` |
 
-1. 新建分支并提交改动
-2. PR 标题建议：`docs: add 2026-Wxx weekly report`
-3. PR 描述至少包含：
-   - 本周新增周报
-   - 讨论入口（Discussions 或 Issues）
-   - 需要 reviewer 重点关注的问题
+> 字段名必须用英文。旧的中文写法（`标题`、`作者`、`阶段总结`……）在构建时会给出警告并按旧值兼容，但请尽快改成英文。
 
-## 4. 讨论与互评
+## 3. 正文结构（建议）
 
-- 优先在 `discussion_url` 对应 Discussion 下讨论
-- 若未启用 Discussions，使用 `issue_fallback_url` 对应 Issue
-- 评论建议聚焦：
-  - 结论是否清晰
-  - 关键资料是否可复现
-  - 下周计划是否可执行
+```md
+## 本周目标
+## 做了什么
+## 结论与数据     ← 有数字、图表、截图最好
+## 卡住的地方     ← 这是别人最想回复的部分
+## 下周计划
+```
 
-## 5. 按周归档建议
+- 图片放 `reports/assets/<周次>/`，正文里写 `![说明](assets/2026-W44/arch.png)`，构建时会自动改写成正确路径。
+- 内容别只贴链接：一段"我看完得到的结论"比十个链接有用。
+- 别在正文里重复写作者/日期/方向，这些从 front matter 渲染，重复写会前后不一致。
 
-- 每周至少一份团队总览周报
-- 个人可按方向补充子周报
-- 避免重名文件，保持 `YYYY-Www-*` 前缀
+## 4. 提交
 
-## 6. 站点构建与发布（开发者可选）
+**网页直接提交**（推荐新手）：
 
-- 本地验证：`npm install && npm run build`
-- 合并到默认分支后，GitHub Actions 可自动部署到 Pages
-- Pages 是展示界面，不是使用本仓库讨论学习的前置条件
+1. 打开 GitHub 仓库 → `reports/` → `Add file` → `Create new file`
+2. 粘贴模板内容，改文件名
+3. 提交到 `main`
+
+**走 PR**（推荐，留 review 痕迹）：
+
+```bash
+git checkout -b report/2026-W44-agent
+# 写文件
+npm install && npm run validate
+git add reports/2026-W44-agent.md
+git commit -m "docs: add 2026-W44 agent report"
+git push -u origin report/2026-W44-agent
+```
+
+PR 会自动跑 `Content check`，红色叉就是字段或文件名不合格，按提示改。
+
+## 5. 讨论
+
+提交后打开自己的周报页面，底部评论区用 GitHub 账号留言即可（首次评论会由 giscus 机器人在 Discussions 里建一条对应讨论）。
+
+评论建议：
+
+- 具体到"哪一句结论我不认同，为什么"，别只写"学习了"。
+- 发现问题就写成可执行动作：谁、下周做什么。
+- 涉及代码/数据的，把关键片段贴出来，别只在评论里放链接。
+
+## 6. 每周节奏（建议）
+
+| 时间 | 动作 |
+| --- | --- |
+| 周一 | 认领本周目标（可以就在上周周报的评论区说一声） |
+| 周五 18:00 | 周报截止，各自提交 |
+| 周五晚 / 周末 | 各自到别人的周报下评论，优先回复「卡住的地方」 |
+| 周一 30 分钟 | 周会只看三件事：本周做了什么、卡在哪、下周三件事 |
+
+## 7. 常见报错
+
+| 报错 | 原因 | 怎么修 |
+| --- | --- | --- |
+| `缺少必填字段 "summary"` | front matter 少了字段 | 补上 |
+| `week "2026-W42" 与 date 不一致` | 手写周次错了 | 删掉 `week` 让它自动推导，或按报错提示改 |
+| `文件名必须是 YYYY-Www-英文短横线 slug.md` | 文件名不合规 | 重命名，如 `2026-10-21-test.md` → `2026-W43-rag-notes.md` |
+| `未知方向 "RAG"` | 方向没登记 | 改成已登记的 key，或到 `site.config.json` 的 `aliases` 里加映射 |
