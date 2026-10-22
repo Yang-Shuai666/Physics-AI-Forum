@@ -36,6 +36,7 @@ export async function loadReports(cfg) {
   const reports = [];
   const diagnostics = [];
   const seen = new Map();
+  const titleSeen = new Map();
 
   for (const file of files) {
     const slug = file.slice(0, -3);
@@ -77,9 +78,21 @@ export async function loadReports(cfg) {
 
     if (week) {
       if (seen.has(week)) {
-        diagnostics.push({ level: "warn", file, message: `本周已有 ${seen.get(week)}，同一周多份周报是允许的` });
+        diagnostics.push({ level: "warn", file, message: `本周还有 ${seen.get(week)}，同一周多份周报是允许的` });
       }
       seen.set(week, file);
+    }
+
+    // 多人同时提交时最常见的事故：复制模板没改标题
+    const titleKey = report.title.trim().toLowerCase();
+    if (titleSeen.has(titleKey)) {
+      diagnostics.push({
+        level: "error",
+        file,
+        message: `标题 “${report.title}” 和 ${titleSeen.get(titleKey)} 完全一样，请改成能区分的标题（例如加上方向或主题）`,
+      });
+    } else {
+      titleSeen.set(titleKey, file);
     }
 
     const { html, headings } = renderDocument(md, parsed.content);

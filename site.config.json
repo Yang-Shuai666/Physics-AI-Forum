@@ -9,6 +9,11 @@
   "siteUrl": "https://yang-shuai666.github.io",
   "homeLatest": 6,
   "members": [],
+  "limits": {
+    "assetWarnKB": 300,
+    "assetErrorKB": 1024,
+    "assetsTotalWarnMB": 200
+  },
   "directions": [
     { "key": "agent", "name": "Agent", "desc": "任务规划、工具调用、自动化执行", "color": "#4f6bed" },
     { "key": "avatar", "name": "数字人", "desc": "形象驱动、语音交互、多模态表现", "color": "#8b5cf6" },

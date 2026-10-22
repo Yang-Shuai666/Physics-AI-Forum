@@ -113,7 +113,7 @@ async function main() {
         <p class="lead">${esc(cfg.description ?? "")}</p>
         <div class="hero-actions">
           <a class="button" href="${withBase(cfg, "archive/")}">浏览全部 ${total} 份周报</a>
-          <a class="button ghost" href="${newReportUrl()}" target="_blank" rel="noopener noreferrer">＋ 提交本周周报</a>
+          <a class="button ghost" href="${withBase(cfg, "new/")}">＋ 提交本周周报</a>
         </div>
       </div>
       <aside class="week-card" aria-label="本周速览">
@@ -126,7 +126,7 @@ async function main() {
           <span>本周 ${weekReports.length} 份</span>
           <span>共 ${total} 份 · ${weekKeys.length} 周</span>
         </div>
-        <a class="button block" href="${newReportUrl()}" target="_blank" rel="noopener noreferrer">＋ 写本周周报</a>
+        <a class="button block" href="${withBase(cfg, "new/")}">＋ 写本周周报</a>
       </aside>
     </div>
   </section>
@@ -443,6 +443,149 @@ window.addEventListener("DOMContentLoaded", function () {
     })
   );
 
+  /* ---------- 新建周报向导 ---------- */
+  const directionOptions = cfg.directions
+    .map((d) => `<option value="${esc(d.key)}">${esc(d.name)}</option>`)
+    .join("");
+
+  const newPageBody = `<main id="main" class="wrap">
+  <header class="page-head">
+    <h1>写一份周报</h1>
+    <p class="page-meta">在这里填几个字段，会跳到 GitHub 的「新建文件」页，<strong>文件名和 front matter 都已经填好</strong>，你只需要写正文并提交。</p>
+  </header>
+
+  <form class="form-card" id="new-form">
+    <div class="form-grid">
+      <label class="field">
+        <span>你的名字</span>
+        <input name="author" required placeholder="大大帅" autocomplete="name">
+      </label>
+      <label class="field">
+        <span>GitHub 用户名 <em>可选，用于头像和作者页</em></span>
+        <input name="github" placeholder="dadashuai" autocomplete="username" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>学习方向</span>
+        <select name="direction">${directionOptions}</select>
+      </label>
+      <label class="field">
+        <span>主题 <em>英文短横线，可留空</em></span>
+        <input name="topic" placeholder="agent-eval" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>日期</span>
+        <input type="date" name="date" value="${today()}" required>
+      </label>
+    </div>
+
+    <p class="file-preview">文件名：<code id="file-preview">…</code></p>
+    <p class="form-hint" id="file-hint" hidden>文件名里没有可用的英文标识（会变成 <code>member</code>），两个人可能撞车——建议填 GitHub 用户名。</p>
+    <p class="form-note">同一周允许多份周报，文件名会自动带上你的名字和主题，不会和别人的撞车。如果 GitHub 提示「文件已存在」，说明你这周交过同名周报了，换个主题再提交。</p>
+
+    <button class="button" type="submit">打开 GitHub 新建文件 →</button>
+  </form>
+</main>`;
+
+  await write(
+    "new/index.html",
+    layout(cfg, {
+      title: "写周报",
+      description: "填几个字段，一键跳到 GitHub 新建文件页，文件名和 front matter 自动填好。",
+      pathname: "new/",
+      active: "new",
+      body: newPageBody,
+      scripts: `<script>
+(function () {
+  var cfg = ${JSON.stringify({ repo: cfg.repo, branch: cfg.branch })};
+  var form = document.getElementById("new-form");
+  var preview = document.getElementById("file-preview");
+  var hint = document.getElementById("file-hint");
+  if (!form) return;
+
+  function slug(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
+  function isoWeek(dateStr) {
+    var d = new Date(dateStr + "T00:00:00Z");
+    if (isNaN(d.getTime())) return "";
+    var day = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - day);
+    var year = d.getUTCFullYear();
+    var start = Date.UTC(year, 0, 1);
+    var week = Math.ceil(((d.getTime() - start) / 86400000 + 1) / 7);
+    return year + "-W" + String(week).padStart(2, "0");
+  }
+
+  function read() {
+    var date = form.elements.date.value || "";
+    var week = isoWeek(date);
+    var who = slug(form.elements.github.value) || slug(form.elements.author.value) || "member";
+    var topic = slug(form.elements.topic.value);
+    var name = week + "-" + who + (topic ? "-" + topic : "") + ".md";
+    return { date: date, week: week, who: who, topic: topic, name: name };
+  }
+
+  function refresh() {
+    var p = read();
+    preview.textContent = "reports/" + p.name;
+    if (hint) hint.hidden = p.who !== "member";
+  }
+
+  form.addEventListener("input", refresh);
+  refresh();
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var p = read();
+    var lines = [
+      "---",
+      "title: " + p.week + " 我的学习周报",
+      "author: " + (form.elements.author.value.trim() || "你的名字"),
+      "github: " + (form.elements.github.value.trim() || "your-github-id"),
+      "date: " + p.date,
+      "week: " + p.week,
+      "directions: [" + form.elements.direction.value + "]",
+      "goal: 一句话说明本周目标",
+      "summary: 两三句话：做了什么、结论是什么、下一步做什么",
+      "tags: []",
+      "---",
+      "",
+      "## 本周目标",
+      "",
+      "- ",
+      "",
+      "## 做了什么",
+      "",
+      "- ",
+      "",
+      "## 结论与数据",
+      "",
+      "- ",
+      "",
+      "## 卡住的地方",
+      "",
+      "- ",
+      "",
+      "## 下周计划",
+      "",
+      "- ",
+      ""
+    ];
+    window.location.href =
+      "https://github.com/" + cfg.repo + "/new/" + cfg.branch + "/reports" +
+      "?filename=" + encodeURIComponent(p.name) +
+      "&value=" + encodeURIComponent(lines.join("\\n"));
+  });
+})();
+</script>
+`,
+    })
+  );
+
   /* ---------- 数据 / 订阅 ---------- */
   await write(
     "reports/index.json",
@@ -481,6 +624,7 @@ window.addEventListener("DOMContentLoaded", function () {
     "archive/",
     "search/",
     "week/",
+    "new/",
     ...weekKeys.map((w) => `week/${w}/`),
     ...cfg.directions.map((d) => `direction/${d.key}/`),
     ...[...byAuthor.values()].map((a) => `author/${pathId(a.key)}/`),
@@ -578,45 +722,6 @@ ${items}
 
 function today() {
   return new Date().toISOString().slice(0, 10);
-}
-
-function weekOf(dateStr) {
-  const d = new Date(`${dateStr}T00:00:00Z`);
-  const day = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - day);
-  const year = d.getUTCFullYear();
-  const yearStart = Date.UTC(year, 0, 1);
-  const week = Math.ceil(((d.getTime() - yearStart) / 86400000 + 1) / 7);
-  return `${year}-W${String(week).padStart(2, "0")}`;
-}
-
-function newReportUrl() {
-  const date = today();
-  const week = weekOf(date);
-  const template = `---
-title: ${week} 我的学习周报
-author: 你的名字
-github: 你的 GitHub 用户名
-date: ${date}
-week: ${week}
-directions:
-  - agent
-goal: 一句话说明本周目标
-summary: 两三句话说明本周做了什么、结论是什么
-tags: []
----
-
-## 本周目标
-
-## 做了什么
-
-## 结论与数据
-
-## 卡住的地方
-
-## 下周计划
-`;
-  return `https://github.com/${cfg.repo}/new/${cfg.branch}/reports?filename=${encodeURIComponent(`${week}-topic.md`)}&value=${encodeURIComponent(template)}`;
 }
 
 main().catch((error) => {
