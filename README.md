@@ -11,7 +11,7 @@
 
 1. **新建**：打开站点首页点「＋ 提交本周周报」，在「写一份周报」页填名字 / 方向 / 主题，会跳到 GitHub 预填好文件名和 front matter 的新建文件页；也可以直接复制 `reports/_template.md`。
 2. **填写**：改标题、作者、方向、目标、摘要，然后写正文。文件名保持 `2026-W44-agent-eval.md` 这种格式（周次-英文短横线主题）。
-3. **提交**：直接提交到 `main` 即可（个人可直接 commit，团队想留痕就走 PR）。提交后 Actions 会自动构建，几分钟后站点上就有你的周报。
+3. **提交**：直接提交到 `main` 即可（个人可直接 commit，团队想留痕就走 PR）。提交后 Actions 会先校验内容再构建，几分钟后站点上就有你的周报；校验不通过会停在 CI，不会发布带坏图的页面。
 
 讨论不用另外建 Issue：打开周报详情页，滚到底部用 GitHub 账号评论即可，评论会同步到 Discussions 的「周报讨论」分类。
 
@@ -100,7 +100,7 @@ tags: [评测, benchmark]
 ## 本地开发
 
 ```bash
-npm install
+npm ci
 npm run build        # 生成 dist/
 npm run preview      # http://localhost:4173
 npm run validate     # 校验所有周报
@@ -110,8 +110,10 @@ npm run build:all    # 构建 + 生成搜索索引（和 CI 一致）
 本地预览要先把 `BASE_PATH` 设成 `/`（默认是 `/Physics-AI-Forum/`，对应 Pages 项目页路径）：
 
 ```bash
-BASE_PATH=/ npm run build:all && npm run preview
+BASE_PATH= npm run build:all && npm run preview
 ```
+
+> Windows Git Bash 下如果 `BASE_PATH=/` 被转成盘符路径（例如 `/D:/software/Git/`），用上面的空值写法，或加 `MSYS_NO_PATHCONV=1`。
 
 ## 为什么是这个方案
 

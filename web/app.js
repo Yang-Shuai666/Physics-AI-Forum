@@ -35,8 +35,13 @@ if (tocLinks.length && "IntersectionObserver" in window) {
       for (const heading of visible) {
         if (!topmost || heading.getBoundingClientRect().top < topmost.getBoundingClientRect().top) topmost = heading;
       }
-      for (const link of tocLinks) link.classList.remove("is-active");
-      pair.get(topmost)?.classList.add("is-active");
+      for (const link of tocLinks) {
+        link.classList.remove("is-active");
+        link.removeAttribute("aria-current");
+      }
+      const active = pair.get(topmost);
+      active?.classList.add("is-active");
+      active?.setAttribute("aria-current", "location");
     },
     { rootMargin: "-84px 0px -68% 0px", threshold: 0 }
   );
@@ -75,6 +80,7 @@ const zoomable = [...document.querySelectorAll(".prose img")];
 if (zoomable.length) {
   let overlay = null;
   let closeButton = null;
+  let previouslyFocused = null;
 
   const close = () => {
     if (!overlay) return;
@@ -82,10 +88,13 @@ if (zoomable.length) {
     overlay = null;
     closeButton = null;
     document.body.style.removeProperty("overflow");
+    if (previouslyFocused && document.contains(previouslyFocused)) previouslyFocused.focus();
+    previouslyFocused = null;
   };
 
   const open = (src, alt) => {
     if (!overlay) {
+      previouslyFocused = document.activeElement;
       overlay = document.createElement("div");
       overlay.className = "lightbox";
       overlay.setAttribute("role", "dialog");
@@ -93,6 +102,11 @@ if (zoomable.length) {
       overlay.setAttribute("aria-label", "图片预览");
       overlay.innerHTML = '<img alt=""><button class="lightbox-close" type="button" aria-label="关闭预览">×</button>';
       overlay.addEventListener("click", close);
+      overlay.addEventListener("keydown", (event) => {
+        if (event.key !== "Tab") return;
+        event.preventDefault();
+        closeButton?.focus();
+      });
       document.body.append(overlay);
       document.body.style.overflow = "hidden";
       closeButton = overlay.querySelector(".lightbox-close");

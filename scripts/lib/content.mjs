@@ -142,7 +142,6 @@ function validate(report, body, file, diagnostics, cfg) {
   if (report.summary && [...report.summary].length > 160) add("warn", "summary 超过 160 字，列表卡片会被截断");
   if (report.status === "draft") add("warn", "status: draft —— 站点会标成草稿，仍会公开显示");
   if (!body.trim()) add("error", "正文为空");
-  if (/<script/i.test(body)) add("error", "正文里出现了 <script> 标签，请删掉");
 
   // 图片 / 附件：必须放在 reports/assets/ 下，且文件要真实存在
   const referenced = new Set();

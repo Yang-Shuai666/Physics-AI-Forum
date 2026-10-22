@@ -8,6 +8,8 @@ on:
       - "reports/**"
       - "scripts/**"
       - "site.config.json"
+      - "package.json"
+      - "package-lock.json"
 
 jobs:
   validate:
@@ -17,13 +19,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
+          cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Validate front matter and file names
         run: npm run validate
 
-      - name: Dry-run the build
-        run: npm run build
+      - name: Build site + search index (dry run)
+        run: npm run build:all

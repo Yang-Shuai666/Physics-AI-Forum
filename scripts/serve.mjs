@@ -21,18 +21,36 @@ const MIME = {
 };
 
 const server = http.createServer((req, res) => {
-  const pathname = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
-  let file = path.join(root, pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
+  } catch {
+    res.writeHead(400).end("Bad Request");
+    return;
+  }
 
-  if (!file.startsWith(root)) {
+  const target = path.resolve(root, "." + pathname);
+  const relative = path.relative(root, target);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
     res.writeHead(403).end("Forbidden");
     return;
   }
+
+  let file = target;
   if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, "index.html");
-  if (!fs.existsSync(file)) file = path.join(root, "404.html");
+
+  let status = 200;
+  if (!fs.existsSync(file)) {
+    file = path.join(root, "404.html");
+    status = 404;
+  }
+  if (!fs.existsSync(file)) {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("Not Found");
+    return;
+  }
 
   const body = fs.readFileSync(file);
-  res.writeHead(fs.existsSync(file) ? 200 : 404, {
+  res.writeHead(status, {
     "Content-Type": MIME[path.extname(file)] ?? "application/octet-stream",
   });
   res.end(body);

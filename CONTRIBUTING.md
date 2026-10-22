@@ -63,7 +63,7 @@ YYYY-Www-<英文短横线主题>.md
 ```
 
 构建时会自动改写成 `/Physics-AI-Forum/reports/assets/2026-W44/rag-pipeline.png`。
-路径写错（文件不存在）时 CI 会报 `引用的附件不存在` 并指出是哪个文件，不会悄悄挂掉。
+路径写错（文件不存在）时 CI 会报 `引用的附件不存在` 并指出是哪个文件；部署会停在校验这一步，不会把坏图发上线。
 
 ### 方法 B：直接拖进 GitHub 编辑器（最快）
 
@@ -112,7 +112,7 @@ YYYY-Www-<英文短横线主题>.md
 ```bash
 git checkout -b report/2026-W44-agent
 # 写文件
-npm install && npm run validate
+npm ci && npm run validate
 git add reports/2026-W44-agent.md
 git commit -m "docs: add 2026-W44 agent report"
 git push -u origin report/2026-W44-agent
@@ -173,7 +173,7 @@ Git / CI 层面的行为：
 
 - **都直接提交 `main`、不同文件**：GitHub 按顺序应用，不会冲突，也不需要 pull。
 - **都走 PR、不同文件**：自动合并；只有改到同一个文件才需要手动解决。
-- **几乎同时 push**：Pages 只发布最新那次（工作流里配了 `concurrency`），中间那次会被取消，属于正常现象。
+- **几乎同时 push**：Pages 工作流会排队，最终发布最新那次；中间的排队任务可能被合并或取消，属于正常现象。
 
 真遇到冲突（改到同一个文件）：
 

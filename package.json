@@ -11,7 +11,7 @@
     "preview": "node scripts/serve.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

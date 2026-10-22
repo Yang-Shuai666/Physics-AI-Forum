@@ -95,7 +95,9 @@ async function main() {
   }
 
   const weekKeys = [...weeks.keys()].sort().reverse();
-  const latestWeek = weekKeys[0] ?? isoWeek(today());
+  const currentWeek = isoWeek(today());
+  const latestWeek = weekKeys[0] ?? currentWeek;
+  const isCurrentWeek = latestWeek === currentWeek;
   const latest = reports.slice(0, cfg.homeLatest ?? 6);
   const total = reports.length;
   const lastDate = reports[0]?.date ?? today();
@@ -116,14 +118,14 @@ async function main() {
           <a class="button ghost" href="${withBase(cfg, "new/")}">＋ 提交本周周报</a>
         </div>
       </div>
-      <aside class="week-card" aria-label="本周速览">
+      <aside class="week-card" aria-label="${isCurrentWeek ? "本周速览" : "最近一周速览"}">
         <div class="week-card-head">
-          <p>本周速览</p>
+          <p>${isCurrentWeek ? "本周速览" : "最近一周"}</p>
           <span class="pill">${esc(latestWeek)}</span>
         </div>
         <ul class="member-list">${memberRows}</ul>
         <div class="week-card-foot">
-          <span>本周 ${weekReports.length} 份</span>
+          <span>${isCurrentWeek ? "本周" : "该周"} ${weekReports.length} 份</span>
           <span>共 ${total} 份 · ${weekKeys.length} 周</span>
         </div>
         <a class="button block" href="${withBase(cfg, "new/")}">＋ 写本周周报</a>
@@ -159,7 +161,7 @@ async function main() {
           const authors = new Set(weeks.get(week).map((r) => r.author));
           return `<a class="row row-week" href="${weekUrl(cfg, week)}">
         <span class="row-week">${esc(week)}</span>
-        <span class="row-title">${esc(weekLabel(week))}${week === latestWeek ? ' <em class="tag-now">本周</em>' : ""}</span>
+        <span class="row-title">${esc(weekLabel(week))}${week === currentWeek ? ' <em class="tag-now">本周</em>' : ""}</span>
         <span class="row-author">${weeks.get(week).length} 份</span>
         <span class="row-date">${authors.size} 位作者</span>
       </a>`;
@@ -207,6 +209,7 @@ async function main() {
     </aside>
 
     <article class="report">
+      <div data-pagefind-body>
       <header class="report-head">
         <div class="chips">${report.directions.map((key) => dirChip(cfg, key)).join("")}${report.tags.map((tag) => `<a class="tag" href="${tagUrl(cfg, tag)}">${esc(tag)}</a>`).join("")}</div>
         <h1>${esc(report.title)}</h1>
@@ -222,6 +225,7 @@ async function main() {
       </header>
 
       <div class="prose">${bodyHtml}</div>
+      </div>
 
       <nav class="pager" aria-label="上一篇 / 下一篇">
         ${[
@@ -264,7 +268,7 @@ async function main() {
           .map(
             (week) => `<a class="row row-week" href="${weekUrl(cfg, week)}">
           <span class="row-week">${esc(week)}</span>
-          <span class="row-title">${esc(weekLabel(week))}${week === latestWeek ? ' <em class="tag-now">本周</em>' : ""}</span>
+          <span class="row-title">${esc(weekLabel(week))}${week === currentWeek ? ' <em class="tag-now">本周</em>' : ""}</span>
           <span class="row-author">${weeks.get(week).length} 份</span>
           <span class="row-date">${new Set(weeks.get(week).map((r) => r.author)).size} 位作者</span>
         </a>`
@@ -280,7 +284,7 @@ async function main() {
     const newerWeek = weekKeys[i - 1];
     const body = `<main id="main" class="wrap">
   ${crumb([{ href: withBase(cfg, "week/"), label: "按周" }, { label: week }])}
-  ${pageHeadSimple(`${week}`, `${weekLabel(week)} · 本周 ${list.length} 份周报`, week === latestWeek)}
+  ${pageHeadSimple(`${week}`, `${weekLabel(week)} · ${week === currentWeek ? "本周" : "该周"} ${list.length} 份周报`, week === currentWeek)}
   <div class="cards">${list.map((r) => reportCard(cfg, r)).join("")}</div>
   <nav class="week-nav">
     ${olderWeek ? `<a class="button ghost" href="${weekUrl(cfg, olderWeek)}">← ${esc(olderWeek)}</a>` : "<span></span>"}
@@ -324,7 +328,7 @@ async function main() {
 </main>`;
     await write(
       `author/${fsId(author.key)}/index.html`,
-      layout(cfg, { title: author.name, description: `${author.name} 的周报`, pathname: `author/${author.key}/`, active: "author", body })
+      layout(cfg, { title: author.name, description: `${author.name} 的周报`, pathname: `author/${pathId(author.key)}/`, active: "author", body })
     );
   }
 
@@ -335,7 +339,7 @@ async function main() {
   ${pageHeadSimple(`#${tag}`, `共 ${list.length} 份周报`)}
   <div class="rows">${list.map((r) => listRow(cfg, r)).join("")}</div>
 </main>`;
-    await write(`tag/${fsId(tag)}/index.html`, layout(cfg, { title: `#${tag}`, description: `标签 ${tag} 的周报`, pathname: `tag/${tag}/`, active: "tag", body }));
+    await write(`tag/${fsId(tag)}/index.html`, layout(cfg, { title: `#${tag}`, description: `标签 ${tag} 的周报`, pathname: `tag/${pathId(tag)}/`, active: "tag", body }));
   }
 
   /* ---------- 归档 ---------- */
@@ -391,7 +395,8 @@ async function main() {
       pathname: "search/",
       active: "search",
       body: searchBody,
-      headExtra: `<link rel="stylesheet" href="${withBase(cfg, "pagefind/pagefind-ui.css")}">\n`,
+      headExtra: `<meta name="robots" content="noindex">
+<link rel="stylesheet" href="${withBase(cfg, "pagefind/pagefind-ui.css")}">\n`,
       scripts: `<script src="${withBase(cfg, "pagefind/pagefind-ui.js")}"></script>
 <script>
 window.addEventListener("DOMContentLoaded", function () {
@@ -403,8 +408,8 @@ window.addEventListener("DOMContentLoaded", function () {
     bundlePath: ${JSON.stringify(withBase(cfg, "pagefind/"))},
     translations: {
       placeholder: "搜索标题、作者、正文…",
-      zero_results: "没有找到 “{query}”，换个词试试",
-      many_results: "找到 {count} 条结果",
+      zero_results: "没有找到 “[SEARCH_TERM]”，换个词试试",
+      many_results: "找到 [COUNT] 条结果",
       one_result: "找到 1 条结果",
       searching: "搜索中…"
     }
@@ -429,6 +434,7 @@ window.addEventListener("DOMContentLoaded", function () {
     layout(cfg, {
       title: "页面不存在",
       pathname: "404.html",
+      headExtra: '<meta name="robots" content="noindex">\n',
       body: `<main id="main" class="wrap">
   <section class="notfound">
     <p class="eyebrow">404</p>
@@ -474,7 +480,7 @@ window.addEventListener("DOMContentLoaded", function () {
       </label>
       <label class="field">
         <span>日期</span>
-        <input type="date" name="date" value="${today()}" required>
+        <input type="date" name="date" required>
       </label>
     </div>
 
@@ -493,6 +499,7 @@ window.addEventListener("DOMContentLoaded", function () {
       description: "填几个字段，一键跳到 GitHub 新建文件页，文件名和 front matter 自动填好。",
       pathname: "new/",
       active: "new",
+      headExtra: '<meta name="robots" content="noindex">\n',
       body: newPageBody,
       scripts: `<script>
 (function () {
@@ -507,6 +514,15 @@ window.addEventListener("DOMContentLoaded", function () {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
+  }
+
+  function yaml(value) {
+    return JSON.stringify(String(value == null ? "" : value));
+  }
+
+  function localToday() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
   function isoWeek(dateStr) {
@@ -535,22 +551,26 @@ window.addEventListener("DOMContentLoaded", function () {
     if (hint) hint.hidden = p.who !== "member";
   }
 
+  if (!form.elements.date.value) form.elements.date.value = localToday();
   form.addEventListener("input", refresh);
   refresh();
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var p = read();
+    var author = form.elements.author.value.trim() || "你的名字";
+    var github = form.elements.github.value.trim().replace(/^@/, "") || "your-github-id";
+    var topic = form.elements.topic.value.trim();
     var lines = [
       "---",
-      "title: " + p.week + " 我的学习周报",
-      "author: " + (form.elements.author.value.trim() || "你的名字"),
-      "github: " + (form.elements.github.value.trim() || "your-github-id"),
+      "title: " + yaml(p.week + " " + (topic || author) + " 学习周报"),
+      "author: " + yaml(author),
+      "github: " + yaml(github),
       "date: " + p.date,
       "week: " + p.week,
       "directions: [" + form.elements.direction.value + "]",
-      "goal: 一句话说明本周目标",
-      "summary: 两三句话：做了什么、结论是什么、下一步做什么",
+      "goal: " + yaml("一句话说明本周目标"),
+      "summary: " + yaml("两三句话：做了什么、结论是什么、下一步做什么"),
       "tags: []",
       "---",
       "",
@@ -622,9 +642,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const paths = [
     "",
     "archive/",
-    "search/",
     "week/",
-    "new/",
     ...weekKeys.map((w) => `week/${w}/`),
     ...cfg.directions.map((d) => `direction/${d.key}/`),
     ...[...byAuthor.values()].map((a) => `author/${pathId(a.key)}/`),
