@@ -42,6 +42,7 @@ tags: [评测, benchmark]
 
 - 首页：本周速览（谁交了 / 还没交）、最新周报、方向入口、按周浏览、参与方式
 - 周报详情页：Markdown 渲染、代码高亮、目录跟随滚动、阅读进度条、上一/下一篇、复制链接、giscus 评论
+- 图片：正文图片懒加载、点击放大；放在 `reports/assets/<周次>/`，正文用 `assets/…` 相对路径引用（详见 [CONTRIBUTING](./CONTRIBUTING.md#35-怎么加图片)）
 - 归档页：按年/周分组，关键词 + 方向双筛选
 - 方向页：`/direction/agent/` 等；作者页：`/author/<github>/`；标签页：`/tag/<标签>/`
 - 搜索页：Pagefind 静态全文检索（构建时生成索引），页头搜索框直接跳 `?q=`

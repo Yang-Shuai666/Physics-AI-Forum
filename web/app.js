@@ -70,6 +70,56 @@ if (copyButton) {
   });
 }
 
+/* ---------- 图片点击放大 ---------- */
+const zoomable = [...document.querySelectorAll(".prose img")];
+if (zoomable.length) {
+  let overlay = null;
+  let closeButton = null;
+
+  const close = () => {
+    if (!overlay) return;
+    overlay.remove();
+    overlay = null;
+    closeButton = null;
+    document.body.style.removeProperty("overflow");
+  };
+
+  const open = (src, alt) => {
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.className = "lightbox";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-label", "图片预览");
+      overlay.innerHTML = '<img alt=""><button class="lightbox-close" type="button" aria-label="关闭预览">×</button>';
+      overlay.addEventListener("click", close);
+      document.body.append(overlay);
+      document.body.style.overflow = "hidden";
+      closeButton = overlay.querySelector(".lightbox-close");
+    }
+    const image = overlay.querySelector("img");
+    image.src = src;
+    image.alt = alt || "";
+    closeButton?.focus();
+  };
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
+
+  for (const image of zoomable) {
+    image.setAttribute("tabindex", "0");
+    image.setAttribute("role", "button");
+    image.addEventListener("click", () => open(image.currentSrc || image.src, image.alt));
+    image.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open(image.currentSrc || image.src, image.alt);
+      }
+    });
+  }
+}
+
 /* ---------- 归档筛选（关键词 + 方向） ---------- */
 const filterInput = document.querySelector("#filter-input");
 if (filterInput) {

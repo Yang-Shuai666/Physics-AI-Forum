@@ -184,7 +184,7 @@ async function main() {
   for (const [index, report] of reports.entries()) {
     const newer = reports[index - 1];
     const older = reports[index + 1];
-    const bodyHtml = report.html.replace(/(src|href)="assets\//g, `$1="${withBase(cfg, "reports/assets/")}`);
+    const bodyHtml = report.html.replace(/(src|href)="(?:\.\/)?assets\//g, `$1="${withBase(cfg, "reports/assets/")}`);
 
     const body = `<main id="main" class="wrap">
   ${crumb([{ href: withBase(cfg, "archive/"), label: "归档" }, { href: weekUrl(cfg, report.week), label: report.week }, { label: report.title }])}

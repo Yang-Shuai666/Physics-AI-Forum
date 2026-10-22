@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { isoWeek } from "./weeks.mjs";
@@ -72,7 +73,7 @@ export async function loadReports(cfg) {
       links: normalizeLinks(fm.links),
     };
 
-    validate(report, parsed.content, file, diagnostics);
+    validate(report, parsed.content, file, diagnostics, cfg);
 
     if (week) {
       if (seen.has(week)) {
@@ -103,7 +104,7 @@ function normalizeKeys(data, file, diagnostics) {
   return out;
 }
 
-function validate(report, body, file, diagnostics) {
+function validate(report, body, file, diagnostics, cfg) {
   const add = (level, message) => diagnostics.push({ level, file, message });
 
   for (const key of REQUIRED) {
@@ -129,6 +130,22 @@ function validate(report, body, file, diagnostics) {
   if (report.status === "draft") add("warn", "status: draft —— 站点会标成草稿，仍会公开显示");
   if (!body.trim()) add("error", "正文为空");
   if (/<script/i.test(body)) add("error", "正文里出现了 <script> 标签，请删掉");
+
+  // 图片 / 附件：必须放在 reports/assets/ 下，且文件要真实存在
+  const referenced = new Set();
+  for (const match of body.matchAll(/!?\[[^\]]*\]\(\s*(?:\.\/)?assets\/([^)\s]+)/g)) {
+    const ref = decodeURIComponent(match[1].replace(/["'<>]/g, ""));
+    referenced.add(ref);
+    if (!existsSync(path.join(cfg.root, "reports", "assets", ref))) {
+      add("error", `引用的附件不存在：reports/assets/${ref}`);
+    }
+  }
+  for (const match of body.matchAll(/!\[[^\]]*\]\(\s*((?!https?:|data:|\/|\.?\/?assets\/)[^)\s]+)/g)) {
+    add("error", `图片必须放在 reports/assets/ 下，并用 “assets/…/<文件名>” 引用（当前是 “${match[1]}”）`);
+  }
+  for (const ref of referenced) {
+    if (/\.(md|markdown)$/i.test(ref)) add("warn", `附件里引用了 Markdown 文件 “${ref}”，它不会被发布`);
+  }
 }
 
 function text(value) {

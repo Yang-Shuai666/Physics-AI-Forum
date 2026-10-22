@@ -47,6 +47,24 @@ export function createMarkdown() {
     return defaultLink(tokens, idx, options, env, self);
   };
 
+  // 图片：懒加载 + 用 title 控制宽度（"640" 或 "640x360"）
+  const defaultImage = md.renderer.rules.image ?? ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options));
+  md.renderer.rules.image = (tokens, idx, options, env, self) => {
+    const token = tokens[idx];
+    token.attrSet("loading", "lazy");
+    token.attrSet("decoding", "async");
+
+    const title = token.attrGet("title") ?? "";
+    const size = /^(\d+)(?:x(\d+))?$/.exec(title.trim());
+    if (size) {
+      token.attrSet("width", size[1]);
+      if (size[2]) token.attrSet("height", size[2]);
+      token.attrSet("title", "");
+    }
+
+    return defaultImage(tokens, idx, options, env, self);
+  };
+
   return md;
 }
 

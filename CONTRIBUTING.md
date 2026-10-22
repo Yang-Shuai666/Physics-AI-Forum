@@ -43,9 +43,50 @@ YYYY-Www-<英文短横线主题>.md
 ## 下周计划
 ```
 
-- 图片放 `reports/assets/<周次>/`，正文里写 `![说明](assets/2026-W44/arch.png)`，构建时会自动改写成正确路径。
 - 内容别只贴链接：一段"我看完得到的结论"比十个链接有用。
 - 别在正文里重复写作者/日期/方向，这些从 front matter 渲染，重复写会前后不一致。
+
+## 3.5 怎么加图片
+
+图片有两种加法，**推荐第一种**（图跟着仓库走，仓库搬到哪图就在哪）。
+
+### 方法 A：提交到 `reports/assets/<周次>/`（推荐）
+
+1. 打开 https://github.com/Yang-Shuai666/Physics-AI-Forum/upload/main/reports/assets
+2. 把图片拖进页面（建议先压缩到 300KB 以内，PNG/WebP）
+3. 文件名改成英文小写短横线：`rag-pipeline.png`（中文和空格在 URL 里会被编码）
+4. Commit changes
+5. 在周报正文里用**相对 `assets/` 的路径**引用：
+
+```md
+![RAG 检索链路](assets/2026-W44/rag-pipeline.png)
+```
+
+构建时会自动改写成 `/Physics-AI-Forum/reports/assets/2026-W44/rag-pipeline.png`。
+路径写错（文件不存在）时 CI 会报 `引用的附件不存在` 并指出是哪个文件，不会悄悄挂掉。
+
+### 方法 B：直接拖进 GitHub 编辑器（最快）
+
+在编辑 `reports/xxx.md` 时，把图片直接拖进编辑器，GitHub 会自动上传并插入一条
+`https://github.com/user-attachments/assets/...` 的绝对链接。
+
+优点：一步到位，不用管目录结构。
+缺点：**图不在你的仓库里**，以后迁移站点/离线归档会缺图，而且链接很长。
+
+> 快速截图、临时贴图用 B；要长期留存的架构图、结果图用 A。
+
+### 图片尺寸与排版
+
+- 默认占满正文宽度，点一下可以放大查看。
+- 想限制宽度，在链接后面的第二对引号里写像素（也可以写 `宽x高`）：
+
+```md
+![架构图](assets/2026-W44/arch.png "640")
+![对比图](assets/2026-W44/compare.png "640x360")
+```
+
+- 图片下面想加说明，就在下一行写一行斜体，别指望 alt 文本显示出来。
+- 大文件（PPT/PDF 超过 10MB）建议放网盘，正文里给链接，别塞进仓库——仓库和 Pages 都有体积上限。
 
 ## 4. 提交
 
