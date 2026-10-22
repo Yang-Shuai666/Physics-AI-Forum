@@ -22,13 +22,13 @@ YYYY-Www-<英文短横线主题>.md
 | --- | --- | --- |
 | `title` | ✅ | 标题，建议带周次和方向，如 `2026-W44 Agent 评测与成本` |
 | `author` | ✅ | 显示名 |
-| `github` | | GitHub 用户名，不带 `@`，用于以后跳转主页 |
+| `github` | | GitHub 用户名，不带 `@`。填了会用你的 GitHub 头像，并生成 `/author/<用户名>/` 作者页 |
 | `date` | ✅ | `YYYY-MM-DD`，写完这周的最后一天 |
 | `week` | | `YYYY-Www`，可省略，由 `date` 自动推导并校验 |
 | `directions` | ✅ | 方向 key 列表，取值见 `site.config.json`：`agent` / `avatar` / `autodrive` / `embodied` |
 | `goal` | ✅ | 一句话目标，详情页顶部色块显示 |
 | `summary` | ✅ | 两三句话，列表卡片显示，≤160 字 |
-| `tags` | | 关键词列表，用于筛选和搜索 |
+| `tags` | | 关键词列表，会生成 `/tag/<标签>/` 页并参与搜索 |
 | `status` | | `done`（默认）/ `draft` / `wip` |
 
 > 字段名必须用英文。旧的中文写法（`标题`、`作者`、`阶段总结`……）在构建时会给出警告并按旧值兼容，但请尽快改成英文。

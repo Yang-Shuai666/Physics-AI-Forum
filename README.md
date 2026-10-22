@@ -40,12 +40,13 @@ tags: [评测, benchmark]
 
 ## 站点能力
 
-- 首页：最新周报、方向入口、按周浏览、参与方式
-- 周报详情页：Markdown 渲染、代码高亮、目录、上/下一篇、giscus 评论
-- 归档页：按年/周分组，支持关键词筛选
-- 方向页：`/direction/agent/` 等，按方向聚合
-- 搜索页：Pagefind 静态全文检索（构建时生成索引）
-- 数据接口：`/reports/index.json`（给机器读或做看板用）
+- 首页：本周速览（谁交了 / 还没交）、最新周报、方向入口、按周浏览、参与方式
+- 周报详情页：Markdown 渲染、代码高亮、目录跟随滚动、阅读进度条、上一/下一篇、复制链接、giscus 评论
+- 归档页：按年/周分组，关键词 + 方向双筛选
+- 方向页：`/direction/agent/` 等；作者页：`/author/<github>/`；标签页：`/tag/<标签>/`
+- 搜索页：Pagefind 静态全文检索（构建时生成索引），页头搜索框直接跳 `?q=`
+- 订阅：`/feed.xml`（RSS 2.0）、`/reports/index.json`（给机器读或做看板）
+- 自动暗色模式、手机端单列布局、键盘可达
 - SEO：每页独立 title/description/canonical、sitemap.xml、robots.txt、404 页
 
 ## 目录结构
@@ -79,6 +80,19 @@ tags: [评测, benchmark]
    `curl "https://giscus.app/api/discussions/categories?repo=Yang-Shuai666/Physics-AI-Forum"` 查到它的 `id`，
    填进 `site.config.json` 的 `category` / `categoryId`。
 5. 改 `site.config.json` 里的 `siteUrl` / `basePath`（项目页要带仓库名）。
+
+### 站点配置项速查（`site.config.json`）
+
+| 字段 | 作用 |
+| --- | --- |
+| `headline` | 首页大标题 |
+| `description` | 首页副标题 / 全站默认 description |
+| `members` | 团队名单 `[{ "name": "张三", "github": "zhangsan" }]`。**填了之后首页「本周速览」会显示谁已提交、谁还没交**；留空则只列出本周提交的人 |
+| `directions[]` | 方向 `key` / `name` / `desc` / `color`。`color` 决定卡片左边框、chip、方向页的色相 |
+| `aliases` | 允许旧的中文方向名映射到 key（例如 `"数字人": "avatar"`） |
+| `giscus` | 评论区配置；`mapping: pathname` 表示按页面路径自动建讨论 |
+
+> 想在首页看到「谁还没交」，把 `members` 按上面的格式填上即可——名字或 GitHub 用户名与周报 `author` / `github` 对得上就算已提交。
 
 ## 本地开发
 

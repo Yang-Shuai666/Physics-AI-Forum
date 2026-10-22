@@ -1,17 +1,19 @@
 {
   "title": "Physics-AI-Forum",
-  "tagline": "团队每周学习周报",
-  "description": "Agent / 数字人 / 自动驾驶 / 具身智能 —— 每周一份学习成果，一个能讨论的地方。",
+  "tagline": "团队学习周报",
+  "headline": "每周一份学习成果，一个能认真讨论的地方",
+  "description": "Agent / 数字人 / 自动驾驶 / 具身智能——四个方向各自推进，每周五汇总成一份周报，谁都能在下面评论。",
   "repo": "Yang-Shuai666/Physics-AI-Forum",
   "branch": "main",
   "basePath": "/Physics-AI-Forum/",
   "siteUrl": "https://yang-shuai666.github.io",
   "homeLatest": 6,
+  "members": [],
   "directions": [
-    { "key": "agent", "name": "Agent", "desc": "任务规划、工具调用、自动化执行" },
-    { "key": "avatar", "name": "数字人", "desc": "形象驱动、语音交互、多模态表现" },
-    { "key": "autodrive", "name": "自动驾驶", "desc": "感知、预测、规划控制与安全验证" },
-    { "key": "embodied", "name": "具身智能", "desc": "机器人感知决策一体化与真实环境交互" }
+    { "key": "agent", "name": "Agent", "desc": "任务规划、工具调用、自动化执行", "color": "#4f6bed" },
+    { "key": "avatar", "name": "数字人", "desc": "形象驱动、语音交互、多模态表现", "color": "#8b5cf6" },
+    { "key": "autodrive", "name": "自动驾驶", "desc": "感知、预测、规划控制与安全验证", "color": "#0d9488" },
+    { "key": "embodied", "name": "具身智能", "desc": "机器人感知决策一体化与真实环境交互", "color": "#d97706" }
   ],
   "aliases": {
     "Agent": "agent",
