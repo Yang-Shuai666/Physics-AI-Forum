@@ -1,12 +1,10 @@
 ---
-title: "2026-W45 miniMaxH3 学习周报"
+title: "2026-W45 miniMaxH3本地测试"
 author: "losto"
 github: "your-github-id"
 date: 2026-11-02
 week: 2026-W45
 directions: [avatar]
-goal: "一句话说明本周目标"
-summary: "两三句话：做了什么、结论是什么、下一步做什么"
 tags: []
 ---
 
@@ -100,7 +98,7 @@ curl -I --connect-timeout 10 https://huggingface.co
 │       └── minimaxh3_art_is_explosion.safetensors
 ```
 
-![[Pasted image 20261101140818.png]]
+![](https://i-blog.csdnimg.cn/direct/4a610eba110840288ad01456b7847fe2.png)
 
 ## H3 R2V 的白膜视频输入
 
@@ -126,9 +124,9 @@ ref_video_audio_0
 ref_audio_0
 ...
 ```
-![[Pasted image 20261101140923.png]]
+![](https://i-blog.csdnimg.cn/direct/b5eb37766a054ddb9049bf9506df132d.png)
 
-![[Pasted image 20261101140850.png]]
+![](https://i-blog.csdnimg.cn/direct/7c8bfb013e6a45229d73122d66281202.png)
 ### 参考图片
 
 例如：
@@ -230,6 +228,10 @@ Prompt + Reference Image
       H3 R2V
 ```
 
+
+
+
+
 ### Baseline 2
 
 ``` text
@@ -237,6 +239,10 @@ Prompt + Reference Image + Blender RGB Reference Video
         ↓
       H3 R2V
 ```
+
+
+
+
 
 ### 后续结构化控制
 
