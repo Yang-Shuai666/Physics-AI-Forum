@@ -229,7 +229,7 @@ Prompt + Reference Image
 ```
 
 
-
+![](assets/2026-W43/MiniMax_H3_00001_.mp4)
 
 
 ### Baseline 2
@@ -241,7 +241,7 @@ Prompt + Reference Image + Blender RGB Reference Video
 ```
 
 
-
+![](assets/2026-W43/MiniMax_H3_00002_.mp4)
 
 
 ### 后续结构化控制
